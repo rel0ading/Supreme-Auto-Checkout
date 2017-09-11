@@ -1,6 +1,7 @@
 import { getFromChromeStorage } from '../../app/utils/StorageManager';
 import * as menus from '../../app/constants/Menus';
 import * as Helpers from '../../app/utils/Helpers';
+import ProductWatcher from './ProductWatcher';
 
 
 async function getEnabledAtcProducts() {
@@ -80,7 +81,21 @@ async function loop() {
 
 
 async function start() {
+  const watcher = new ProductWatcher();
+  await watcher.start();
   await loop();
 }
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function (details) {
+    const userAgent = details.requestHeaders.filter(x => x.name === 'User-Agent')[0];
+    if (userAgent) {
+      userAgent.value = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13G34';
+    }
+    return { requestHeaders: details.requestHeaders };
+  },
+  { urls: ['*://*.supremenewyork.com/mobile/*', 'http://www.supremenewyork.com/mobile_stock.json'] },
+  ['blocking', 'requestHeaders'],
+);
 
 start();

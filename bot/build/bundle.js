@@ -27029,6 +27029,8 @@ store.subscribe(function () {
   }
 });
 
+window.addEventListener('storage', function (e) {});
+
 var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.hashHistory, store);
 
 _reactDom2.default.render(_react2.default.createElement(

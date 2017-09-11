@@ -50,6 +50,10 @@ store.subscribe(() => {
   }
 });
 
+window.addEventListener('storage', (e) => {
+
+});
+
 const history = syncHistoryWithStore(hashHistory, store);
 
 ReactDOM.render(
